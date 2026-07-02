@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://standardcompute.org/foundry/schema/organization.schema.json",
+  "title": "Foundry Organization",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "properties": {
+    "apiVersion": { "const": "foundry/v1" },
+    "kind": { "const": "Organization" },
+    "metadata": { "$ref": "common.schema.json#/$defs/metadata" },
+    "spec": {
+      "type": "object",
+      "properties": {
+        "cloud": {
+          "type": "object",
+          "required": ["defaultProvider"],
+          "properties": {
+            "defaultProvider": { "$ref": "common.schema.json#/$defs/provider" },
+            "providers": { "type": "object" }
+          },
+          "additionalProperties": true
+        },
+        "naming": {
+          "type": "object",
+          "properties": {
+            "pattern": { "type": "string", "pattern": "\\{org\\}" },
+            "delimiter": { "type": "string", "maxLength": 1 }
+          }
+        },
+        "labels": { "$ref": "common.schema.json#/$defs/labels" },
+        "network": {
+          "type": "object",
+          "properties": { "cidr": { "$ref": "common.schema.json#/$defs/cidr" } }
+        },
+        "state": {
+          "type": "object",
+          "properties": {
+            "backend": { "type": "string", "enum": ["s3", "gcs", "azurerm", "local"] }
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

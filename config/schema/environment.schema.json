@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://standardcompute.org/foundry/schema/environment.schema.json",
+  "title": "Foundry Environment",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "properties": {
+    "apiVersion": { "const": "foundry/v1" },
+    "kind": { "const": "Environment" },
+    "metadata": { "$ref": "common.schema.json#/$defs/metadata" },
+    "spec": {
+      "type": "object",
+      "properties": {
+        "tier": { "type": "string", "enum": ["production", "nonproduction"] },
+        "cloud": { "type": "object", "additionalProperties": true },
+        "network": {
+          "type": "object",
+          "properties": { "cidr": { "$ref": "common.schema.json#/$defs/cidr" } }
+        },
+        "kubernetes": {
+          "type": "object",
+          "properties": {
+            "version": { "type": "string" },
+            "minNodes": { "type": "integer", "minimum": 1 },
+            "maxNodes": { "type": "integer", "minimum": 1 }
+          },
+          "additionalProperties": true
+        },
+        "labels": { "$ref": "common.schema.json#/$defs/labels" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

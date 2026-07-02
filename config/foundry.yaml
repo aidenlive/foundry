@@ -1,0 +1,116 @@
+# =============================================================================
+# Foundry organization configuration
+# =============================================================================
+# This file is the ROOT of the Foundry configuration hierarchy and the single
+# source of truth for organization-wide defaults. Values here may be overridden
+# with increasing precedence by:
+#
+#   1. config/foundry.yaml              (this file — org defaults)
+#   2. config/projects/<project>.yaml   (project overrides)
+#   3. config/environments/<env>.yaml   (environment overrides)
+#   4. foundry.local.yaml               (developer-local, git-ignored)
+#
+# Maps are deep-merged; lists and scalars are replaced. Run
+# `foundry config render -p <project> -e <env>` to see the merged result and
+# `foundry config get <dotted.path>` to see which file a value came from.
+# =============================================================================
+apiVersion: foundry/v1
+kind: Organization
+
+metadata:
+  name: standardcompute
+  displayName: "Standard Compute Org."
+  domain: standardcompute.org
+  repository: https://github.com/standardcompute/foundry
+
+spec:
+  # ---------------------------------------------------------------------------
+  # Cloud providers. `defaultProvider` is used when a project does not choose
+  # one. Per-provider defaults (region, etc.) live under `providers`.
+  # ---------------------------------------------------------------------------
+  cloud:
+    defaultProvider: digitalocean
+    providers:
+      digitalocean:
+        region: nyc3
+      aws:
+        region: us-east-1
+      gcp:
+        region: us-central1
+        project: ""            # set your GCP project id
+      azure:
+        location: eastus
+
+  # ---------------------------------------------------------------------------
+  # Naming and labels applied to every resource Foundry manages.
+  # Tokens: {org} {project} {environment} {component}
+  # ---------------------------------------------------------------------------
+  naming:
+    pattern: "{org}-{project}-{environment}-{component}"
+    delimiter: "-"
+
+  labels:
+    managed-by: foundry
+    org: standardcompute
+
+  # ---------------------------------------------------------------------------
+  # Network defaults. Environments carve their CIDRs out of this supernet.
+  # ---------------------------------------------------------------------------
+  network:
+    cidr: "10.0.0.0/8"
+
+  # ---------------------------------------------------------------------------
+  # Security baseline (secure by default). Environments may loosen these only
+  # deliberately and visibly.
+  # ---------------------------------------------------------------------------
+  security:
+    encryptionAtRest: required
+    publicIngressDefault: deny
+    ssh:
+      port: 22
+      allowedCidrs: []          # empty list = SSH closed by default
+    imdsV2Required: true        # AWS instance metadata hardening
+    deletionProtectionDefault: false
+
+  # ---------------------------------------------------------------------------
+  # Remote state. `s3` works for AWS S3, DigitalOcean Spaces and MinIO.
+  # `foundry config export --format backend` renders backend.hcl from this.
+  # ---------------------------------------------------------------------------
+  state:
+    backend: s3
+    bucket: ""                  # e.g. standardcompute-tfstate
+    region: ""                  # backend region (or Spaces region)
+    endpoint: ""                # set for Spaces/MinIO, empty for AWS S3
+    lock: true
+
+  # ---------------------------------------------------------------------------
+  # Toolchain versions `foundry doctor` checks for.
+  # ---------------------------------------------------------------------------
+  toolchain:
+    opentofu: ">=1.7"
+    terraform: ">=1.6"          # supported alternative to OpenTofu
+    kubectl: ">=1.29"
+    helm: ">=3.14"
+    sops: ">=3.8"
+    age: ">=1.1"
+    python: ">=3.10"
+
+  # ---------------------------------------------------------------------------
+  # Observability conventions (see docs/operations/observability.md).
+  # ---------------------------------------------------------------------------
+  observability:
+    metrics: prometheus
+    logs: loki
+    traces: otlp
+    defaultRetentionDays: 30
+
+  # ---------------------------------------------------------------------------
+  # Cost guardrails. Projects set budgets; CI surfaces plan-time cost review.
+  # ---------------------------------------------------------------------------
+  cost:
+    currency: USD
+    requireBudgetOnProjects: true
+
+  contacts:
+    security: security@standardcompute.org
+    operations: ops@standardcompute.org

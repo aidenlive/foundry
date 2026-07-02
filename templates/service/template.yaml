@@ -1,0 +1,12 @@
+name: service
+description: Production-ready HTTP service (stdlib Python, Docker, Kubernetes, CI)
+variables:
+  - name: service_name
+    description: DNS-safe service name used for images, manifests, and labels
+    required: true
+  - name: port
+    description: TCP port the service listens on
+    default: 8080
+  - name: description
+    description: One-line service description
+    default: A Foundry service.

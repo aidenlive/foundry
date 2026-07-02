@@ -1,0 +1,70 @@
+site_name: Foundry
+site_description: Cloud-agnostic infrastructure toolkit by Standard Compute Org
+site_url: https://standardcompute.github.io/foundry
+repo_url: https://github.com/standardcompute/foundry
+repo_name: standardcompute/foundry
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Light mode
+  features:
+    - navigation.sections
+    - navigation.footer
+    - content.code.copy
+    - content.action.edit
+    - search.suggest
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.details
+
+nav:
+  - Home: index.md
+  - Getting started:
+      - Installation: getting-started/installation.md
+      - Quickstart: getting-started/quickstart.md
+      - Concepts: getting-started/concepts.md
+  - Configuration:
+      - The model: configuration/model.md
+      - Precedence & provenance: configuration/precedence.md
+      - Schemas & validation: configuration/schema.md
+  - Building blocks:
+      - Modules overview: modules/overview.md
+      - Module contracts: modules/contracts.md
+      - Stacks: stacks.md
+      - CLI reference: cli.md
+  - Operating:
+      - CI/CD: ci-cd.md
+      - Security: security.md
+      - Observability: operations/observability.md
+      - Secrets: operations/secrets.md
+      - Cost: operations/cost.md
+  - Decisions:
+      - ADR-0001 Record ADRs: adr/0001-record-adrs.md
+      - ADR-0002 Config as source of truth: adr/0002-config-as-source-of-truth.md
+      - ADR-0003 Cloud-agnostic contracts: adr/0003-cloud-agnostic-module-contracts.md
+      - ADR-0004 OpenTofu and Terraform: adr/0004-opentofu-terraform.md

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ foundry.service_name }}"
+  labels:
+    app.kubernetes.io/name: "{{ foundry.service_name }}"
+    app.kubernetes.io/managed-by: foundry
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: "{{ foundry.service_name }}"
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

@@ -1,0 +1,25 @@
+name: Feature request
+description: Propose a module, command, or convention
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What can you not do today, or only do painfully?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Sketch the interface — config keys, CLI flags, module contract.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [CLI, modules, stacks, templates, config, docs, CI/CD, other]
+    validations:
+      required: true

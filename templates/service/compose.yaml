@@ -1,0 +1,8 @@
+services:
+  {{ foundry.service_name }}:
+    build: .
+    ports:
+      - "{{ foundry.port }}:{{ foundry.port }}"
+    environment:
+      PORT: "{{ foundry.port }}"
+    restart: unless-stopped

@@ -1,0 +1,32 @@
+# Project configuration — overrides organization defaults for this project.
+# Precedence: org < project < environment < foundry.local.yaml
+apiVersion: foundry/v1
+kind: Project
+
+metadata:
+  name: demo
+  displayName: "Foundry Demo"
+  description: >-
+    Reference project showing a small, production-shaped footprint: a private
+    network, a managed Kubernetes cluster, and object storage on a single
+    provider. Used by the demo stacks under stacks/demo.
+  owner: platform-team
+  repository: https://github.com/standardcompute/foundry
+
+spec:
+  cloud:
+    provider: digitalocean      # a project picks exactly one primary provider
+
+  # Stacks this project deploys, in dependency order.
+  stacks:
+    - network
+    - platform
+
+  budgets:
+    monthlyUsd: 200
+    alertThresholdPercent: 80
+
+  labels:
+    project: demo
+    team: platform
+    cost-center: eng-platform

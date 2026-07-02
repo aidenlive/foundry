@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://standardcompute.org/foundry/schema/project.schema.json",
+  "title": "Foundry Project",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "properties": {
+    "apiVersion": { "const": "foundry/v1" },
+    "kind": { "const": "Project" },
+    "metadata": { "$ref": "common.schema.json#/$defs/metadata" },
+    "spec": {
+      "type": "object",
+      "properties": {
+        "cloud": {
+          "type": "object",
+          "properties": { "provider": { "$ref": "common.schema.json#/$defs/provider" } },
+          "additionalProperties": true
+        },
+        "stacks": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+          "uniqueItems": true
+        },
+        "budgets": {
+          "type": "object",
+          "properties": {
+            "monthlyUsd": { "type": "number", "exclusiveMinimum": 0 },
+            "alertThresholdPercent": { "type": "number", "minimum": 1, "maximum": 100 }
+          }
+        },
+        "labels": { "$ref": "common.schema.json#/$defs/labels" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

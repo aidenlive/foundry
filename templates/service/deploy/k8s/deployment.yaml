@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ foundry.service_name }}"
+  labels:
+    app.kubernetes.io/name: "{{ foundry.service_name }}"
+    app.kubernetes.io/managed-by: foundry
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "{{ foundry.service_name }}"
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "{{ foundry.service_name }}"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: "{{ foundry.service_name }}"
+          image: "ghcr.io/OWNER/{{ foundry.service_name }}:latest"  # set by CI or kustomize
+          ports:
+            - name: http
+              containerPort: {{ foundry.port }}
+          env:
+            - name: PORT
+              value: "{{ foundry.port }}"
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]

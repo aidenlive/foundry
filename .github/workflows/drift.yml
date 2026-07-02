@@ -1,0 +1,76 @@
+# Nightly drift detection: plan every production stack; a non-empty plan
+# (detailed exit code 2) opens/refreshes a drift issue.
+name: drift
+
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {project: demo, environment: prod, stack: network}
+          - {project: demo, environment: prod, stack: platform}
+    env:
+      DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
+      SPACES_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID }}
+      SPACES_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.7.1
+
+      - name: Install Foundry CLI
+        run: pip install ./cli
+
+      - name: Plan (detect drift)
+        id: plan
+        continue-on-error: true
+        run: >
+          foundry stack plan
+          -p ${{ matrix.project }} -e ${{ matrix.environment }} -s ${{ matrix.stack }}
+          -- -detailed-exitcode -lock=false
+
+      - name: Open drift issue
+        if: steps.plan.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `drift: ${{ matrix.project }}/${{ matrix.environment }}/${{ matrix.stack }}`;
+            const {data: issues} = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo,
+              state: 'open', labels: 'drift',
+            });
+            const body = [
+              `Nightly plan for \`${{ matrix.project }}/${{ matrix.environment }}/${{ matrix.stack }}\``,
+              `reported changes on ${new Date().toISOString()}.`,
+              '',
+              `See the [workflow run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}).`,
+            ].join('\n');
+            const existing = issues.find(i => i.title === title);
+            if (existing) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: existing.number, body,
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner, repo: context.repo.repo,
+                title, body, labels: ['drift', 'ops'],
+              });
+            }

@@ -1,0 +1,67 @@
+# Reusable stack pipeline. Call from a project workflow:
+#
+#   jobs:
+#     network-dev:
+#       uses: ./.github/workflows/terraform-reusable.yml
+#       with: {project: demo, environment: dev, stack: network, action: plan}
+#       secrets: inherit
+#
+# Environment protection: the job binds to the GitHub environment named after
+# `environment`, so required reviewers gate applies to staging/prod.
+name: terraform
+
+on:
+  workflow_call:
+    inputs:
+      project:
+        type: string
+        required: true
+      environment:
+        type: string
+        required: true
+      stack:
+        type: string
+        required: true
+      action:
+        type: string
+        required: false
+        default: plan
+        description: plan | apply
+
+jobs:
+  stack:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    env:
+      # Provider + state credentials come from GitHub environment secrets.
+      DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      SPACES_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID }}
+      SPACES_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.7.1
+
+      - name: Install Foundry CLI
+        run: pip install ./cli
+
+      - name: Init
+        run: foundry stack init -p ${{ inputs.project }} -e ${{ inputs.environment }} -s ${{ inputs.stack }}
+
+      - name: Plan
+        run: foundry stack plan -p ${{ inputs.project }} -e ${{ inputs.environment }} -s ${{ inputs.stack }}
+
+      - name: Apply
+        if: inputs.action == 'apply'
+        run: >
+          foundry stack apply --allow-prod
+          -p ${{ inputs.project }} -e ${{ inputs.environment }} -s ${{ inputs.stack }}
+          -- -auto-approve

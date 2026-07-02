@@ -1,0 +1,9 @@
+name: terraform-stack
+description: Foundry stack skeleton wired to the config context and labels module
+variables:
+  - name: stack_name
+    description: Stack name (directory should usually match)
+    required: true
+  - name: provider
+    description: Module implementation to wire (aws | gcp | azure | digitalocean)
+    default: digitalocean

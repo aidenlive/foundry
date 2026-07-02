@@ -1,0 +1,53 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install CLI (dev)
+        run: pip install -e "./cli[dev]"
+
+      - name: Lint (ruff)
+        run: ruff check cli
+
+      - name: Unit tests
+        run: pytest cli/tests -q
+
+      - name: YAML lint
+        run: yamllint -c .yamllint.yml .
+
+      - name: HCL syntax gate
+        run: python scripts/check_hcl.py .
+
+      - name: Validate Foundry configuration
+        run: foundry validate
+
+      - name: Docs build (strict)
+        run: foundry docs build
+
+  hcl-fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.7.1
+
+      - name: tofu fmt -check
+        run: tofu fmt -check -recursive modules stacks

@@ -1,0 +1,6 @@
+# sops governance: which keys may decrypt which files.
+# Replace the placeholder with your age public key (`age-keygen`), or add
+# cloud KMS keys per environment. See docs/operations/secrets.md.
+creation_rules:
+  - path_regex: config/secrets/.*\.enc\.ya?ml$
+    age: age1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq

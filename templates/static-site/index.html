@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ foundry.name }} · {{ foundry.org }}</title>
+<meta name="description" content="{{ foundry.tagline }}">
+<style>
+  /* {{ foundry.org }} · generated {{ foundry.year }} by Foundry */
+  :root {
+    --ink: #101418;
+    --paper: #eef1f4;
+    --line: #c9d0d8;
+    --accent: {{ foundry.accent }};
+    --mono: "SFMono-Regular", ui-monospace, "Cascadia Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+    background:
+      linear-gradient(var(--paper), var(--paper)) padding-box,
+      radial-gradient(circle at 1px 1px, var(--line) 1px, transparent 0) 0 0 / 28px 28px;
+    background-color: var(--paper);
+    color: var(--ink);
+    min-height: 100svh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+  }
+  header, main, footer { width: min(68rem, 92vw); margin-inline: auto; }
+  header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding-block: 1.4rem; border-bottom: 2px solid var(--ink);
+  }
+  .brand { font: 700 1rem var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+  .brand a { color: inherit; text-decoration: none; }
+  .status { font: 12px/1 var(--mono); display: inline-flex; gap: .5em; align-items: center; }
+  .dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2.2s ease-out infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); }
+    70%  { box-shadow: 0 0 0 12px transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
+  }
+  main { padding-block: clamp(3rem, 9vh, 6rem) 4rem; }
+  h1 {
+    font-size: clamp(2.6rem, 8.5vw, 6.5rem);
+    line-height: .96; letter-spacing: -.03em; text-wrap: balance;
+    max-width: 14ch;
+  }
+  h1 em { font-style: normal; color: var(--accent); }
+  .tagline {
+    margin-top: 1.2rem; font: 500 1.05rem/1.5 var(--mono);
+    max-width: 44ch; color: color-mix(in srgb, var(--ink) 78%, var(--paper));
+  }
+  .rule { margin-block: 2.6rem; border: 0; border-top: 1px solid var(--line); }
+  .cards { display: grid; gap: 1px; background: var(--line);
+           border: 1px solid var(--line);
+           grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+  .card { background: var(--paper); padding: 1.3rem 1.4rem; }
+  .card h2 { font: 700 .78rem var(--mono); text-transform: uppercase;
+             letter-spacing: .08em; color: var(--accent); margin-bottom: .5rem; }
+  .card p { font-size: .95rem; }
+  .cta {
+    display: inline-block; margin-top: 2.6rem; padding: .85rem 1.3rem;
+    font: 600 .95rem var(--mono);
+    color: var(--paper); background: var(--ink); text-decoration: none;
+    border: 2px solid var(--ink); transition: .15s ease;
+  }
+  .cta:hover, .cta:focus-visible { background: var(--accent); border-color: var(--accent); }
+  footer {
+    padding-block: 1.2rem; border-top: 2px solid var(--ink);
+    display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    font: 12px/1.6 var(--mono);
+  }
+  footer a { color: inherit; }
+  @media (prefers-reduced-motion: reduce) { .dot { animation: none; } }
+</style>
+</head>
+<body>
+  <header>
+    <span class="brand"><a href="https://{{ foundry.org_domain }}">{{ foundry.org }}</a></span>
+    <span class="status"><span class="dot" aria-hidden="true"></span>ALL&nbsp;SYSTEMS&nbsp;NOMINAL</span>
+  </header>
+
+  <main>
+    <h1>{{ foundry.name }}<em>.</em></h1>
+    <p class="tagline">{{ foundry.tagline }}</p>
+
+    <hr class="rule">
+
+    <section class="cards" aria-label="Highlights">
+      <article class="card">
+        <h2>Reproducible</h2>
+        <p>Every environment is rendered from version-controlled configuration — no snowflakes, no drift.</p>
+      </article>
+      <article class="card">
+        <h2>Portable</h2>
+        <p>One module contract per capability, implemented for every major cloud. Switch by changing one line.</p>
+      </article>
+      <article class="card">
+        <h2>Secure by default</h2>
+        <p>Encrypted at rest, closed to the internet, least privilege — before you write a single override.</p>
+      </article>
+    </section>
+
+    <a class="cta" href="{{ foundry.org_repository }}">View on GitHub →</a>
+  </main>
+
+  <footer>
+    <span>© {{ foundry.year }} {{ foundry.org }}</span>
+    <span>built with <a href="{{ foundry.org_repository }}">foundry</a></span>
+  </footer>
+</body>
+</html>

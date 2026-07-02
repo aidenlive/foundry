@@ -1,0 +1,45 @@
+# Foundry
+
+> Cloud-agnostic infrastructure toolkit by Standard Compute Org
+> (standardcompute.org). Layered YAML configuration is the single source of
+> truth; the `foundry` CLI renders it into Terraform/OpenTofu inputs, state
+> backends, names/labels, env files, and project scaffolds. MIT licensed.
+
+Key facts:
+- Config precedence: organization < project < environment < foundry.local.yaml
+  (maps deep-merge; scalars and lists replace; per-value provenance tracked).
+- Documents: apiVersion foundry/v1; kinds Organization, Project, Environment;
+  schemas in config/schema/ (JSON Schema 2020-12).
+- Module layout: modules/<capability>/<component>/<provider> for
+  aws|gcp|azure|digitalocean; one contract per capability (see the capability
+  README). Provider-free helper: modules/foundation/labels.
+- Stacks: stacks/<project>/<stack> or stacks/<stack>; receive the full
+  rendered config as var.foundry_context; state key
+  <org>/<project>/<environment>/<stack>.tfstate.
+- Naming: {org}-{project}-{environment}-{component}. Labels on everything:
+  managed-by/org/project/environment.
+- Safety: prod applies need --allow-prod; secrets are sops+age only;
+  security defaults (encryption, deny-by-default ingress, IMDSv2, private
+  buckets) are contractual.
+- Machine context command: `foundry context --format json`.
+- Agent rules: /AGENTS.md at the repository root.
+
+## Docs
+
+- [Home](https://standardcompute.github.io/foundry/index.md): overview and map
+- [Quickstart](https://standardcompute.github.io/foundry/getting-started/quickstart.md): clone to planned VPC
+- [Concepts](https://standardcompute.github.io/foundry/getting-started/concepts.md): the six-word vocabulary
+- [Configuration model](https://standardcompute.github.io/foundry/configuration/model.md): documents, context, exports
+- [Precedence](https://standardcompute.github.io/foundry/configuration/precedence.md): merge rules and provenance
+- [Module contracts](https://standardcompute.github.io/foundry/modules/contracts.md): the provider-portability rules
+- [Stacks](https://standardcompute.github.io/foundry/stacks.md): deployable units and CLI injection
+- [CLI reference](https://standardcompute.github.io/foundry/cli.md): every command
+- [CI/CD](https://standardcompute.github.io/foundry/ci-cd.md): pipelines, environment protection, drift
+- [Security](https://standardcompute.github.io/foundry/security.md): posture and guardrails
+
+## Optional
+
+- [Observability](https://standardcompute.github.io/foundry/operations/observability.md)
+- [Secrets](https://standardcompute.github.io/foundry/operations/secrets.md)
+- [Cost](https://standardcompute.github.io/foundry/operations/cost.md)
+- [ADRs](https://standardcompute.github.io/foundry/adr/0001-record-adrs.md)

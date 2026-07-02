@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+dist/
+build/
+
+# Foundry
+foundry.local.yaml
+.foundry/
+
+# IaC
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.backup
+crash.log
+
+# Docs
+site/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

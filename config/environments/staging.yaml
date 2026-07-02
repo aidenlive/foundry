@@ -1,0 +1,28 @@
+apiVersion: foundry/v1
+kind: Environment
+
+metadata:
+  name: staging
+  displayName: Staging
+
+spec:
+  tier: nonproduction
+
+  cloud:
+    region: nyc3
+
+  network:
+    cidr: "10.30.0.0/16"
+
+  kubernetes:
+    version: "1.31"
+    nodeSize: s-2vcpu-4gb
+    minNodes: 2
+    maxNodes: 4
+    highAvailabilityControlPlane: false
+
+  scaling:
+    haRequired: false
+
+  labels:
+    environment: staging

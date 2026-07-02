@@ -1,0 +1,6 @@
+# Default owners for everything in the repository.
+* @standardcompute/platform
+
+/modules/   @standardcompute/platform
+/config/    @standardcompute/platform
+/.github/   @standardcompute/platform

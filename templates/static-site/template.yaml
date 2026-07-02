@@ -1,0 +1,9 @@
+name: static-site
+description: Single-file static site (status/landing page) with zero build step
+variables:
+  - name: tagline
+    description: One-line strapline shown under the title
+    default: Infrastructure, standardized.
+  - name: accent
+    description: Accent color (CSS)
+    default: "#2440ff"
