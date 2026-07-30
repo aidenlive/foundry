@@ -30,7 +30,7 @@ dependencies = [
 dev = [
   "pytest>=8.0",
   "ruff>=0.4",
-  "yamllint>=1.35",
+  "yamllint>=1.38.0",
   "python-hcl2>=4.3",
   "mkdocs-material>=9.5",
 ]
