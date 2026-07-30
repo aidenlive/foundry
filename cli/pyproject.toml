@@ -31,7 +31,7 @@ dev = [
   "pytest>=8.0",
   "ruff>=0.4",
   "yamllint>=1.35",
-  "python-hcl2>=4.3",
+  "python-hcl2>=8.1.2",
   "mkdocs-material>=9.5",
 ]
 
